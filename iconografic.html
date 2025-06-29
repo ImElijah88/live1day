@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live One Day - Project Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Midnight Gold & Violet. This palette was chosen to maintain consistency with the user's established preference for a sophisticated dark theme with gold and violet accents, ensuring a professional and stylish aesthetic. -->
+    <!-- Application Structure Plan: A single-page, top-to-bottom scrolling infographic. The narrative flows from the core project mission and USPs, through a central visual timeline of the 7-phase episode structure, into key concepts like the 'Gentleman' persona, and concludes with clear financial data visualizations (cost breakdowns). This linear structure is optimal for storytelling and easy digestion of key project details in a single pass. -->
+    <!-- Visualization & Content Choices:
+        - Report Info: Core Mission/USPs -> Goal: Inform -> Viz: Large typography & styled cards. Method: HTML/CSS. Justification: Strong, immediate hook for the viewer.
+        - Report Info: 7-Phase Episode Structure -> Goal: Organize/Show Process -> Viz: Vertical Timeline. Method: HTML/CSS. Justification: Clearly visualizes the sequential flow of an episode, which is the core of the project.
+        - Report Info: Cost Estimations -> Goal: Compare/Inform -> Viz: Donut Chart (CapEx) & Bar Chart (OpEx). Method: Chart.js/Canvas. Justification: Effectively breaks down complex financial data into easily understandable proportions and comparisons.
+        - Report Info: 'Gentleman' Pillars & Key Resources -> Goal: Organize/Inform -> Viz: Icon-driven grid layout. Method: HTML/CSS with Unicode icons. Justification: Provides a quick, scannable overview of key concepts and preparedness without excessive text.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2.5rem;
+            padding-left: 2.5rem;
+        }
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            background-color: #9370DB;
+            border-radius: 9999px;
+            border: 3px solid #1a1a2e;
+            z-index: 10;
+        }
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0.75rem;
+            bottom: 0;
+            width: 2px;
+            background-color: #4A5568;
+        }
+        .timeline-item:last-child::after {
+            display: none;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+        <header class="text-center mb-24">
+            <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tighter">Live One Day</h1>
+            <p class="mt-4 text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">An Infographic Overview of a Groundbreaking Journey into Authentic Human Connection</p>
+        </header>
+
+        <section class="mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">The Core Mission & Proposition</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-800/50 p-6 rounded-2xl border border-gray-700">
+                    <h3 class="font-bold text-xl mb-2 text-[#FFD700]">Unrivaled Immersion</h3>
+                    <p class="text-gray-300">Genuinely living a day in a local's reality without personal funds, offering a profound level of authentic engagement.</p>
+                </div>
+                <div class="bg-gray-800/50 p-6 rounded-2xl border border-gray-700">
+                    <h3 class="font-bold text-xl mb-2 text-[#FFD700]">Sophisticated Storytelling</h3>
+                    <p class="text-gray-300">A hybrid format blending lifestyle segments, intimate interviews, raw immersion, and reflective insights.</p>
+                </div>
+                <div class="bg-gray-800/50 p-6 rounded-2xl border border-gray-700">
+                    <h3 class="font-bold text-xl mb-2 text-[#FFD700]">Ethical Reciprocity</h3>
+                    <p class="text-gray-300">A core commitment to ethically compensate or benefit all participants, fostering a respectful and collaborative relationship.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 text-white">The Anatomy of an Episode</h2>
+            <div class="max-w-3xl mx-auto">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-bold text-[#9370DB]">Phase 1: Pre-Production & Planning</h3>
+                        <p class="text-gray-400 mt-1">Engaging a local guide, securing the host, and preparing the itinerary and interview questions before travel.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-bold text-[#9370DB]">Phase 2: Arrival & Gentleman Vlog</h3>
+                        <p class="text-gray-400 mt-1">The host arrives, settles into the hotel base, and films the disciplined 'getting ready' routine, showcasing aspirational travel.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-bold text-[#9370DB]">Phase 3: Car Ride Interview</h3>
+                        <p class="text-gray-400 mt-1">A mobile studio captures the participant's life story using the Dan Harmon Story Circle method and translation tech.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-bold text-[#9370DB]">Phase 4: 24-Hour Immersion</h3>
+                        <p class="text-gray-400 mt-1">The core experience: living without personal resources, filming with minimal gear, and embracing the host's daily life.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-bold text-[#9370DB]">Phase 5: Post-Immersion Debrief</h3>
+                        <p class="text-gray-400 mt-1">An immediate, 'fresh out of the oven' interview to capture raw reflections and emotional takeaways from the experience.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-bold text-[#9370DB]">Phase 6: Post-Production Workflow</h3>
+                        <p class="text-gray-400 mt-1">Raw footage is uploaded to the cloud for the remote editing team to craft into compelling short-form and long-form content.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3 class="text-xl font-bold text-[#9370DB]">Phase 7: Departure & Onward</h3>
+                        <p class="text-gray-400 mt-1">Concluding the visit, managing travel logistics, and strengthening the relationship with the local guide for future collaborations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">Financial Snapshot</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                <div class="bg-gray-800/50 p-8 rounded-2xl border border-gray-700">
+                    <h3 class="text-2xl font-bold text-center mb-6 text-white">Initial Setup Cost Breakdown (CapEx)</h3>
+                    <p class="text-center text-gray-400 mb-6">Estimated allocation of one-time capital expenditures required to launch the project.</p>
+                    <div class="chart-container">
+                        <canvas id="capexChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800/50 p-8 rounded-2xl border border-gray-700">
+                    <h3 class="text-2xl font-bold text-center mb-6 text-white">Per-Episode Cost Comparison (OpEx)</h3>
+                    <p class="text-center text-gray-400 mb-6">An overview of the major recurring operating expenses for producing a single episode.</p>
+                    <div class="chart-container">
+                        <canvas id="opexChart"></canvas>
+                    </div>
+                </div>
+            </div>
+             <div class="mt-12 text-center text-gray-400">
+                <p class="text-lg">Total Estimated Initial CapEx: <span class="font-bold text-[#FFD700]">$7,200 - $22,500+</span></p>
+                <p class="text-lg">Total Estimated Per-Episode OpEx: <span class="font-bold text-[#9370DB]">$2,545 - $11,180+</span></p>
+            </div>
+        </section>
+        
+        <section>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-white">Pillars of the Project</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <div class="bg-gray-800/50 p-6 rounded-2xl border border-gray-700">
+                    <h3 class="font-bold text-xl mb-2 text-white">Key Resources</h3>
+                     <p class="text-gray-400"><span class="text-[#FFD700] mr-2">✈️</span>Travel & Mobility, <span class="text-[#FFD700] mr-2">👔</span>Personal Gentleman Kit, <span class="text-[#FFD700] mr-2">🎥</span>Core Filming Gear, <span class="text-[#FFD700] mr-2">📡</span>Mobile Studio & Comms, <span class="text-[#FFD700] mr-2">💻</span>Post-Production Suite, <span class="text-[#FFD700] mr-2">🤝</span>Human Resources (Guides/Hosts)</p>
+                </div>
+                <div class="bg-gray-800/50 p-6 rounded-2xl border border-gray-700">
+                    <h3 class="font-bold text-xl mb-2 text-white">Legal Framework</h3>
+                    <p class="text-gray-400"><span class="text-[#9370DB] mr-2">✍️</span>Participant & Host Agreements, <span class="text-[#9370DB] mr-2">📝</span>Sponsorship Contracts, <span class="text-[#9370DB] mr-2">©️</span>IP & Music Licensing, <span class="text-[#9370DB] mr-2">🛡️</span>Production Insurance, <span class="text-[#9370DB] mr-2">🌍</span>Local Law Compliance</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrapText = (text) => {
+                const words = text.split(' ');
+                const lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + word).length > 16) {
+                        lines.push(currentLine.trim());
+                        currentLine = '';
+                    }
+                    currentLine += word + ' ';
+                });
+                lines.push(currentLine.trim());
+                return lines;
+            };
+
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#e0e0e0',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                } else {
+                                  return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            
+            const capexCtx = document.getElementById('capexChart');
+            if(capexCtx) {
+                new Chart(capexCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Personal & Luxury Items', 'Filming & Studio Gear', 'Post-Production Setup'],
+                        datasets: [{
+                            label: 'Initial Setup Cost Breakdown',
+                            data: [62.7, 19.3, 18.0],
+                            backgroundColor: ['#9370DB', '#FFD700', '#4A5568'],
+                            borderColor: '#1a1a2e',
+                            borderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {...commonOptions}
+                });
+            }
+
+            const opexCtx = document.getElementById('opexChart');
+            if(opexCtx) {
+                 new Chart(opexCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [wrapText('Guide & Host Fees'), wrapText('Travel & Accommodation'), wrapText('Car Rental'), wrapText('Connectivity & Software')],
+                        datasets: [{
+                            label: 'Cost (High-End Estimate in USD)',
+                            data: [3500, 6500, 800, 350],
+                             backgroundColor: [
+                                'rgba(147, 112, 219, 0.7)',
+                                'rgba(255, 215, 0, 0.7)',
+                                'rgba(74, 85, 104, 0.7)',
+                                'rgba(147, 112, 219, 0.5)',
+                            ],
+                            borderColor: [
+                                '#9370DB',
+                                '#FFD700',
+                                '#4A5568',
+                                '#9370DB',
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        ...commonOptions,
+                        indexAxis: 'y',
+                         scales: {
+                            y: {
+                                ticks: {
+                                    color: '#e0e0e0',
+                                    font: { size: 12 }
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: '#e0e0e0'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                }
+                            }
+                        },
+                        plugins: {
+                           ...commonOptions.plugins,
+                           legend: {
+                               display: false
+                           }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
