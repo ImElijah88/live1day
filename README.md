@@ -1,4 +1,4 @@
-README: Phase 0 - Project Conception & Foundation
+Phase 0 - Project Conception & Foundation
 Overview
 Phase 0: Project Conception & Foundation is the crucial initial stage of the "Live One Day Project." This phase is dedicated to defining the core concept, establishing the foundational vision, assembling the initial leadership team, and outlining preliminary strategies for the entire documentary series. It's the bedrock upon which all subsequent phases are built.
 
