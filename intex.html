@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dashboard: Phase 0 - Project Conception & Foundation</title>
+    
+    <!-- Chosen Palette: Dark Charcoal (#1F2937), Gold (#FFD700), and Lilac/Violet (#7C3AED) accents for a sophisticated, high-contrast dark theme. -->
+    <!-- Application Structure Plan: A three-column, responsive Kanban-style dashboard. Each column represents a major section from the Phase 0 report (Concept, Team Setup, Strategy). This structure provides an intuitive, at-a-glance workflow view. Users can click on any task card to open a modal for detailed information (Activity & Deliverable) and mark it as complete. An overall progress bar at the top provides immediate feedback on project completion. This interactive, task-oriented design was chosen for its clarity and effectiveness in managing a foundational project phase. -->
+    <!-- Visualization & Content Choices: The primary visualization is the Kanban board itself, organizing tasks into logical workflows (Goal: Organize, Method: HTML/CSS/JS). The secondary visualization is the main progress bar, which dynamically updates based on user interaction (Goal: Inform, Method: HTML/CSS/JS). Task details are presented in a modal pop-up to avoid cluttering the main view (Goal: Inform, Method: HTML/CSS/JS). An audio player is included for a narrative overview (Goal: Inform, Method: HTML/JS). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Darker charcoal */
+        }
+        .kanban-column {
+            background-color: #1F2937; /* Dark gray-blue */
+        }
+        .task-card {
+            background-color: #374151; /* Lighter gray-blue */
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+        .task-card.completed {
+            border-left-color: #10B981; /* Green */
+        }
+        .task-card.completed .task-title {
+            text-decoration: line-through;
+            color: #9CA3AF;
+        }
+        .modal-bg {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .modal-content {
+            background-color: #1F2937;
+        }
+        .progress-bar-bg {
+            background-color: #374151;
+        }
+        .progress-bar-fill {
+            background-color: #7C3AED; /* Lilac/Violet */
+        }
+        /* Audio Player Styles */
+        .audio-player-container {
+            background-color: rgba(255, 215, 0, 0.1); /* Transparent golden-ish */
+            border: 2px solid #FFD700; /* Gold border */
+        }
+        .play-pause-btn {
+            background-color: #FFD700; /* Gold button */
+            color: #111827; /* Dark text for button */
+        }
+        .play-pause-btn:hover {
+            background-color: #E6C200; /* Slightly darker gold on hover */
+        }
+        .progress-bar {
+            background-color: #FFD700; /* Gold progress fill */
+        }
+        .time-display {
+            color: #111827; /* Dark text for time numbers */
+            background-color: #FFD700; /* Gold background for time display */
+        }
+    </style>
+</head>
+<body class="text-gray-200 p-4 sm:p-6 lg:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-white">Phase 0: Project Conception & Foundation</h1>
+            <p class="mt-2 text-lg text-gray-400">The Genesis: Building the Core of the "Live One Day Project."</p>
+        </header>
+
+        <!-- Overall Progress -->
+        <div class="mb-8 px-2">
+            <h2 class="text-lg font-semibold mb-2 text-gray-300">Overall Phase Progress</h2>
+            <div class="w-full progress-bar-bg rounded-full h-4">
+                <div id="overall-progress-bar" class="progress-bar-fill h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <p id="progress-text" class="text-right text-sm mt-1 text-gray-400">0 / 6 tasks completed</p>
+        </div>
+        
+        <!-- Audio Player -->
+        <div class="audio-player-container p-4 mb-8 rounded-xl w-full md:w-3/4 lg:w-2/3 mx-auto">
+            <h3 class="text-xl font-semibold text-white mb-3">Phase 0 Audio Overview</h3>
+            <div class="custom-audio-player flex items-center gap-4">
+                <audio id="audioPlayer" src="P0audio.mp3" preload="auto"></audio>
+                <button id="playPauseBtn" class="play-pause-btn w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-colors">
+                    <i id="playPauseIcon" class="fas fa-play text-xl"></i>
+                </button>
+                <span id="currentTime" class="time-display text-sm font-mono px-2 py-1 rounded">0:00</span>
+                <div id="progressBarContainer" class="progress-bar-container relative w-full h-2 bg-gray-600 rounded-full cursor-pointer">
+                    <div id="progressBar" class="progress-bar h-full rounded-full w-0"></div>
+                </div>
+                <span id="duration" class="time-display text-sm font-mono px-2 py-1 rounded">0:00</span>
+            </div>
+            <p class="text-sm text-gray-400 mt-2">Listen to a summary of this phase's objectives and tasks.</p>
+        </div>
+
+        <!-- Kanban Board -->
+        <div id="kanban-board" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Columns will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="task-modal" class="fixed inset-0 modal-bg z-50 hidden items-center justify-center p-4">
+        <div class="modal-content rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 relative">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
+            <h2 id="modal-title" class="text-2xl font-bold text-white mb-4">Task Details</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-300 mb-1">Activity</h3>
+                    <p id="modal-activity" class="text-gray-400 leading-relaxed"></p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-300 mb-1">Key Deliverable</h3>
+                    <p id="modal-deliverable" class="text-gray-400 leading-relaxed"></p>
+                </div>
+            </div>
+            <div class="mt-8 pt-4 border-t border-gray-700">
+                <label class="flex items-center cursor-pointer">
+                    <input type="checkbox" id="modal-completed-checkbox" class="h-5 w-5 rounded bg-gray-700 border-gray-600 text-violet-500 focus:ring-violet-500">
+                    <span class="ml-3 text-lg text-gray-300">Mark as Completed</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tasks = [
+            { id: '0.1', title: 'Define Project Vision & Mission', category: 'Concept & Vision Definition', activity: 'Brainstorm and formalize the overarching purpose, long-term aspirations, and core values of the entire "Live One Day Project" series. This includes defining its unique approach to cultural immersion.', deliverable: 'A concise Project Vision Statement and Mission Statement document.', completed: false },
+            { id: '0.2', title: 'Conduct Initial Market & Audience Research', category: 'Concept & Vision Definition', activity: 'Perform preliminary research to understand the target audience, identify existing gaps in the documentary market, and assess the potential demand and interest for a series like "Live One Day."', deliverable: 'Initial Market & Audience Research Summary (including target demographics, potential platforms, and competitive analysis).', completed: false },
+            { id: '0.3', title: 'Assemble Core Project Team', category: 'Core Team & Infrastructure Setup', activity: 'Identify and bring together the absolute essential individuals (e.g., yourself, your wife) who will serve as the project\'s core leadership and initial driving force. Define their primary roles and responsibilities.', deliverable: 'Confirmed Core Project Team with defined initial roles.', completed: false },
+            { id: '0.4', title: 'Establish Core Project Management Tools', category: 'Core Team & Infrastructure Setup', activity: 'Select and set up the fundamental tools for project tracking (e.g., GitHub for issues, a shared drive for documents) and primary communication channels (e.g., dedicated chat, email group).', deliverable: 'Configured Project Management System and active Communication Channels.', completed: false },
+            { id: '0.5', title: 'Outline High-Level Production Strategy', category: 'Preliminary Feasibility & Strategy', activity: 'Develop a preliminary, high-level strategy for how episodes will be produced, including considerations for location scouting, participant/host selection, and general filming approach for the series.', deliverable: 'High-Level Production Strategy Document (e.g., outlining the unassisted immersion concept, discreet filming).', completed: false },
+            { id: '0.6', title: 'Conduct Preliminary Funding Model Exploration', category: 'Preliminary Feasibility & Strategy', activity: 'Research and evaluate potential funding models for the series (e.g., grants, sponsorships, crowdfunding, streaming platform deals) to understand initial viability and identify promising avenues for future detailed exploration.', deliverable: 'Preliminary Funding Model Report (identifying 2-3 potential primary funding sources).', completed: false }
+        ];
+        
+        const categories = [
+            'Concept & Vision Definition',
+            'Core Team & Infrastructure Setup',
+            'Preliminary Feasibility & Strategy'
+        ];
+
+        const board = document.getElementById('kanban-board');
+        const modal = document.getElementById('task-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modalTitle = document.getElementById('modal-title');
+        const modalActivity = document.getElementById('modal-activity');
+        const modalDeliverable = document.getElementById('modal-deliverable');
+        const modalCompletedCheckbox = document.getElementById('modal-completed-checkbox');
+        
+        let currentTaskId = null;
+
+        function renderBoard() {
+            board.innerHTML = '';
+            categories.forEach(category => {
+                const column = document.createElement('div');
+                column.className = 'kanban-column rounded-lg p-4 h-full';
+                column.innerHTML = `<h2 class="text-xl font-bold mb-4 text-white">${category}</h2><div class="space-y-4"></div>`;
+                
+                const taskContainer = column.querySelector('.space-y-4');
+                tasks.filter(t => t.category === category).forEach(task => {
+                    const card = document.createElement('div');
+                    card.className = `task-card p-4 rounded-lg cursor-pointer border-l-4 ${task.completed ? 'completed' : 'border-violet-500'}`;
+                    card.dataset.id = task.id;
+                    card.innerHTML = `<h3 class="font-bold task-title">${task.id}: ${task.title}</h3>`;
+                    
+                    card.addEventListener('click', () => openModal(task.id));
+                    taskContainer.appendChild(card);
+                });
+                
+                board.appendChild(column);
+            });
+            updateProgress();
+        }
+
+        function openModal(taskId) {
+            currentTaskId = taskId;
+            const task = tasks.find(t => t.id === taskId);
+            modalTitle.textContent = `${task.id}: ${task.title}`;
+            modalActivity.textContent = task.activity;
+            modalDeliverable.textContent = task.deliverable;
+            modalCompletedCheckbox.checked = task.completed;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            currentTaskId = null;
+        }
+
+        function updateProgress() {
+            const completedTasks = tasks.filter(t => t.completed).length;
+            const totalTasks = tasks.length;
+            const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+            
+            const progressBar = document.getElementById('overall-progress-bar');
+            const progressText = document.getElementById('progress-text');
+            
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `${completedTasks} / ${totalTasks} tasks completed`;
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        modalCompletedCheckbox.addEventListener('change', (e) => {
+            if(currentTaskId) {
+                const task = tasks.find(t => t.id === currentTaskId);
+                task.completed = e.target.checked;
+                renderBoard();
+            }
+        });
+
+        // Audio Player Logic
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        const currentTimeElem = document.getElementById('currentTime');
+        const durationElem = document.getElementById('duration');
+        const progressBarContainer = document.getElementById('progressBarContainer');
+        const progressBar = document.getElementById('progressBar');
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+            } else {
+                audioPlayer.pause();
+            }
+        });
+
+        audioPlayer.addEventListener('play', () => {
+            playPauseIcon.classList.remove('fa-play');
+            playPauseIcon.classList.add('fa-pause');
+        });
+
+        audioPlayer.addEventListener('pause', () => {
+            playPauseIcon.classList.remove('fa-pause');
+            playPauseIcon.classList.add('fa-play');
+        });
+
+        const formatTime = (time) => {
+            if (isNaN(time)) return '0:00';
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        };
+
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            durationElem.textContent = formatTime(audioPlayer.duration);
+        });
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            currentTimeElem.textContent = formatTime(audioPlayer.currentTime);
+            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+        });
+        
+        progressBarContainer.addEventListener('click', (e) => {
+            const width = progressBarContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audioPlayer.duration;
+            if (duration) {
+                audioPlayer.currentTime = (clickX / width) * duration;
+            }
+        });
+
+        renderBoard();
+    });
+</script>
+</body>
+</html>
